@@ -20,7 +20,8 @@ export function fetchShoppingCart(title){
   let asyncAction = function(dispatch) {
     $.ajax({
       method: 'GET',
-      url: 'http://localhost:4000/api/shoppingcart'
+      url: 'http://localhost:4000/api/shoppingcart',
+      data: JSON
     })
     .then(data => dispatch(displayCart(data)))
     .catch(resp => dispatch(pageError(resp)))

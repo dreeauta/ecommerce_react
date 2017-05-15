@@ -17,7 +17,9 @@ class userLogin extends React.Component {
   // }
 
 render() {
-  console.log(this.props);
+  // console.log(this.props);
+
+
   return (
     <div>
     <center>

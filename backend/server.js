@@ -119,33 +119,50 @@ app.post('/api/user/login', (req, res, next) => {
         email: customer.email,
         first_name: customer.first_name,
         last_name: customer.last_name,
-        auth_token: loginSession.token
+        auth_token: loginSession.token,
+        customer_id: customer.id
       });
     });
   });
 
+app.use (function Authenticate(req, res, next) {
+  let token = req.query.token || req.body.token;
+  db.one('select * from login_session where token = $1', [token])
+  .then(data => {
+    req.user = data;
+
+
+    next();
+
+  })
+  .catch(err =>
+    res.send('Unauthorized user')
+  );
+});
 
 
 app.post('/api/shopping_cart', (req, res, next) => {
   let data = req.body;
   // data.auth_token
-  db.any('select * from login_session where customer_id = $1', [customer_id])
-  
-  db.one(`insert into product_in_shopping_cart values (default, $1, $2) returning product_id, customer_id`,
+
+  // db.any('select * from login_session where customer_id = $1', [req.user.customer_id])
+
+  db.one(`insert into product_in_shopping_cart values (default, $1, $2) returning product_id, customer_id `,
   [data.product_id,
-  data.customer_id]
-)
+  req.user.customer_id]
+ )
+
 .then(data => res.json(data))
 .catch(next);
 });
 
 
-// app.get('/api/shopping_cart', (req, res, next) => {
-//   let user = req.body.user
-//   db.any('select * from product_in_shopping_cart join product where id = $1 and join customer where id = $2', product_id, customer_id)
-//   .then(data => res.json(data))
-//   .catch(next);
-// });
+app.get('/api/shopping_cart', (req, res, next) => {
+  let data = req.body;
+  db.any('select * from product_in_shopping_cart as pisc join product as p on (pisc.product_id = p.id) where customer_id = $1 ', [req.user.customer_id])
+  .then(data => res.json(data))
+  .catch(next);
+});
 
 app.use((err, req,resp, next) => {
   resp.status(500);

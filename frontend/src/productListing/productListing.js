@@ -11,6 +11,13 @@ class productListing extends React.Component {
 
 
   render() {
+    let loginName;
+    let token = this.props.login.token;
+    console.log(this.props);
+    if (token) {
+      loginName = this.props.login.firstname;
+    }
+
     let mapImages;
     if (this.props.listing.allImages) {
       mapImages = this.props.listing.allImages.map((input,idx) => <Link to={"/productDetail/"+ input.id} key={idx} className="allImages" >  <img src={input.image_path}/></Link> );
@@ -19,6 +26,7 @@ class productListing extends React.Component {
     return (
     <div>
     <center>
+    { loginName }
     <h1> Big Things Happening! </h1>
       <p> { mapImages } </p>
       </center>
