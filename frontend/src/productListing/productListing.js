@@ -26,7 +26,7 @@ class productListing extends React.Component {
     return (
     <div>
     <center>
-    { loginName }
+    <p> Hi { loginName }! </p>
     <h1> Big Things Happening! </h1>
       <p> { mapImages } </p>
       </center>

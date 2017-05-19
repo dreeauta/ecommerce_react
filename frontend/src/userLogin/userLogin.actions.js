@@ -12,7 +12,6 @@ export function loginChange(data, propName){
 
 
 
-
 export function submitLogin(username, password){
   let asyncAction = function(dispatch) {
     console.log(username, password);
